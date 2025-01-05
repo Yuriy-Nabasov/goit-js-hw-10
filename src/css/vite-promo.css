@@ -21,7 +21,7 @@
   filter: blur(4.5rem);
 }
 .main-title {
-  text-align: center;
+  /* text-align: center; */
 }
 .main-title-gradient {
   display: block;

@@ -1,0 +1,1 @@
+{"version":3,"file":"2-snackbar.js","sources":["../src/js/2-snackbar.js"],"sourcesContent":["`use strict`; // Код у суворому режимі\n\nconsole.log(`Snackbar`);\n"],"names":[],"mappings":"wFAEA,QAAQ,IAAI,UAAU"}

@@ -1,57 +1,50 @@
 `use strict`; // Код у суворому режимі
 
-console.log(`Snackbar`);
-
-// Імпортуємо бібліотеку iziToast
+// Підключаємо бібліотеку iziToast
 import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
+// import 'izitoast/dist/css/iziToast.min.css';  // Стилі iziToast підключив через імпорт в styles.css
 
-// Отримуємо посилання на елементи форми
+// Знаходимо елементи форми
 const form = document.querySelector('.form');
 
-// Додаємо обробник події сабміту форми
+// Слухаємо події сабміту форми
 form.addEventListener('submit', event => {
-  event.preventDefault(); // Відміняємо перезавантаження сторінки
+  event.preventDefault(); // Відміняю перезавантаження сторінки
 
-  // Отримуємо значення з форми
+  // Зчитуємо значення з форми
   const formData = new FormData(form);
   const delay = Number(formData.get('delay'));
   const state = formData.get('state');
 
+  //  Функція для створення промісу
+  function createPromise(delay, state) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (state === 'fulfilled') {
+          resolve(delay); // Виконуємо проміс
+        } else {
+          reject(delay); // Відхиляємо проміс
+        }
+      }, delay);
+    });
+  }
+
   // Створюємо проміс
   createPromise(delay, state)
     .then(delay => {
-      // Якщо проміс виконався успішно
+      // Якщо проміс виконався успішно `✅ Fulfilled promise in ${delay}ms`
       iziToast.success({
         title: 'Success',
-        message: `\u2705 Fulfilled promise in ${delay}ms`,
+        message: `✅ Fulfilled promise in ${delay}ms`,
         position: 'topRight',
       });
     })
     .catch(delay => {
-      // Якщо проміс був відхилений
+      // Якщо проміс був відхилений `❌ Rejected promise in ${delay}ms`
       iziToast.error({
         title: 'Error',
-        message: `\u274C Rejected promise in ${delay}ms`,
+        message: `❌ Rejected promise in ${delay}ms`,
         position: 'topRight',
       });
     });
 });
-
-/**
- * Функція для створення промісу
- * @param {number} delay - Затримка у мілісекундах
- * @param {string} state - Стан промісу (fulfilled або rejected)
- * @returns {Promise<number>} - Проміс із затримкою
- */
-function createPromise(delay, state) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (state === 'fulfilled') {
-        resolve(delay); // Виконуємо проміс
-      } else {
-        reject(delay); // Відхиляємо проміс
-      }
-    }, delay);
-  });
-}

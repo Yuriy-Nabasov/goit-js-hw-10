@@ -1,22 +1,19 @@
 `use strict`; // Код у суворому режимі
 
-// console.log(`Timer`);
-
-// Імпортуємо необхідні бібліотеки
+// Імпортуємо обидві бібліотеки
 import flatpickr from 'flatpickr';
-import 'flatpickr/dist/flatpickr.min.css';
+// import 'flatpickr/dist/flatpickr.min.css'; // Стилі flatpickr підключив через імпорт в styles.css
 import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
+// import 'izitoast/dist/css/iziToast.min.css'; // Стилі iziToast підключив через імпорт в styles.css
 
 // Отримуємо доступ до елементів HTML
-const datePicker = document.getElementById('datetime-picker'); // Інпут для вибору дати
-const startButton = document.querySelector('button[data-start]'); // Кнопка старту таймера
-const daysElement = document.querySelector('[data-days]'); // Поле для відображення днів
-const hoursElement = document.querySelector('[data-hours]'); // Поле для відображення годин
-const minutesElement = document.querySelector('[data-minutes]'); // Поле для відображення хвилин
-const secondsElement = document.querySelector('[data-seconds]'); // Поле для відображення секунд
+const datePicker = document.getElementById('datetime-picker');
+const startButton = document.querySelector('.js-flatpickr-btn');
+const daysElement = document.querySelector('.js-value-days');
+const hoursElement = document.querySelector('.js-value-hours');
+const minutesElement = document.querySelector('.js-value-minutes');
+const secondsElement = document.querySelector('.js-value-seconds');
 
-// Початковий стан кнопки "Start" — неактивний
 startButton.disabled = true;
 
 // Змінні для збереження вибраної дати і таймера
@@ -25,12 +22,12 @@ let countdownInterval = null;
 
 // Опції для ініціалізації flatpickr
 const options = {
-  enableTime: true, // Дозволяє вибирати час
-  time_24hr: true, // Формат часу 24 години
-  defaultDate: new Date(), // Поточна дата за замовчуванням
-  minuteIncrement: 1, // Крок вибору хвилин
+  enableTime: true,
+  time_24hr: true,
+  defaultDate: new Date(),
+  minuteIncrement: 1,
   onClose(selectedDates) {
-    const selectedDate = selectedDates[0]; // Отримуємо обрану дату
+    const selectedDate = selectedDates[0];
 
     // Перевіряємо, чи вибрана дата в майбутньому
     if (selectedDate <= new Date()) {
@@ -56,7 +53,7 @@ flatpickr(datePicker, options);
 
 // Обробник події для кнопки "Start"
 startButton.addEventListener('click', () => {
-  if (!userSelectedDate) return; // Якщо дата не вибрана, нічого не робимо
+  if (!userSelectedDate) return;
 
   // Блокуємо інпут і кнопку під час відліку
   datePicker.disabled = true;
@@ -66,8 +63,8 @@ startButton.addEventListener('click', () => {
 
   // Запускаємо зворотний відлік
   countdownInterval = setInterval(() => {
-    const now = new Date(); // Поточний час
-    const timeRemaining = userSelectedDate - now; // Різниця між вибраною і поточною датами
+    const now = new Date();
+    const timeRemaining = userSelectedDate - now;
 
     if (timeRemaining <= 0) {
       clearInterval(countdownInterval); // Зупиняємо таймер
@@ -84,28 +81,28 @@ startButton.addEventListener('click', () => {
     // Конвертуємо мілісекунди у дні, години, хвилини, секунди
     const { days, hours, minutes, seconds } = convertMs(timeRemaining);
     updateTimerUI(days, hours, minutes, seconds); // Оновлюємо інтерфейс
-  }, 1000); // Оновлення кожну секунду
+  }, 1000);
 });
 
 // Функція для оновлення інтерфейсу таймера
 function updateTimerUI(days, hours, minutes, seconds) {
-  daysElement.textContent = addLeadingZero(days); // Додаємо 0 до днів, якщо їх менше 10
-  hoursElement.textContent = addLeadingZero(hours); // Додаємо 0 до годин
-  minutesElement.textContent = addLeadingZero(minutes); // Додаємо 0 до хвилин
-  secondsElement.textContent = addLeadingZero(seconds); // Додаємо 0 до секунд
+  daysElement.textContent = addLeadingZero(days);
+  hoursElement.textContent = addLeadingZero(hours);
+  minutesElement.textContent = addLeadingZero(minutes);
+  secondsElement.textContent = addLeadingZero(seconds);
 }
 
 // Функція для додавання провідного нуля до чисел
 function addLeadingZero(value) {
-  return String(value).padStart(2, '0'); // Форматуємо число до двох символів
+  return String(value).padStart(2, '0');
 }
 
 // Функція для конвертації мілісекунд у дні, години, хвилини і секунди
 function convertMs(ms) {
-  const second = 1000; // Кількість мілісекунд у секунді
-  const minute = second * 60; // Кількість мілісекунд у хвилині
-  const hour = minute * 60; // Кількість мілісекунд у годині
-  const day = hour * 24; // Кількість мілісекунд у дні
+  const second = 1000;
+  const minute = second * 60;
+  const hour = minute * 60;
+  const day = hour * 24;
 
   // Обчислюємо залишок днів, годин, хвилин і секунд
   const days = Math.floor(ms / day);
@@ -113,5 +110,5 @@ function convertMs(ms) {
   const minutes = Math.floor(((ms % day) % hour) / minute);
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
-  return { days, hours, minutes, seconds }; // Повертаємо об'єкт з розрахунками
+  return { days, hours, minutes, seconds };
 }
